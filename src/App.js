@@ -11,7 +11,10 @@ import {
   Row,
   Col,
   Jumbotron} from 'reactstrap';
-import {DataSearch, ReactiveBase, ResultList} from '@appbaseio/reactivesearch';
+import {ReactiveBase} from '@appbaseio/reactivesearch';
+import {Route, BrowserRouter as Router} from "react-router-dom";
+import Search from "./Search";
+import Document from "./Document";
 
 class App extends Component {
   constructor(props) {
@@ -27,64 +30,37 @@ class App extends Component {
       isOpen: !this.state.isOpen
     });
   }
-  static presentQuery() {
-    return {
-      bool: {
-        must_not: {
-          match: {
-            present: false
-          }
-        }
-      }
-    };
-  }
   render() {
     return (
-      <div>
-        <ReactiveBase
-          app="results"
-          url={process.env.REACT_APP_ES_SEARCH_URL}>
-          <Navbar color="inverse" light expand="md">
-            <NavbarBrand href="/">ocr-indexer</NavbarBrand>
-            <DataSearch
-              componentId="searchbox"
-              dataField={["text", "ocrText"]}
-              debounce={200}
-              autosuggest={false}
-            />
-            <NavbarToggler onClick={this.toggle} />
-            <Collapse isOpen={this.state.isOpen} navbar>
-              <Nav className="ml-auto" navbar>
-                <NavItem>
-                  <NavLink href="https://github.com/dnjo/ocr-indexer-web">Github</NavLink>
-                </NavItem>
-              </Nav>
-            </Collapse>
-          </Navbar>
-          <Jumbotron>
-            <Container>
-              <Row>
-                <Col>
-                  <ResultList
-                    componentId="results"
-                    dataField="createdAt"
-                    react={{
-                      "and": ["searchbox"]
-                    }}
-                    onData={(res) => {
-                      return {
-                        title: res.createdAt,
-                        url: `/document/${res._id}`
-                      }
-                    }}
-                    defaultQuery={App.presentQuery}
-                  />
-                </Col>
-              </Row>
-            </Container>
-          </Jumbotron>
-        </ReactiveBase>
-      </div>
+      <Router>
+        <div>
+          <ReactiveBase
+            app="results"
+            url={process.env.REACT_APP_BACKEND_BASE_URL + '/search'}>
+            <Navbar color="inverse" light expand="md">
+              <NavbarBrand href="/">ocr-indexer</NavbarBrand>
+              <NavbarToggler onClick={this.toggle} />
+              <Collapse isOpen={this.state.isOpen} navbar>
+                <Nav className="ml-auto" navbar>
+                  <NavItem>
+                    <NavLink href="https://github.com/dnjo/ocr-indexer-web">Github</NavLink>
+                  </NavItem>
+                </Nav>
+              </Collapse>
+            </Navbar>
+            <Jumbotron>
+              <Container>
+                <Row>
+                  <Col>
+                    <Route path="/" exact component={Search} />
+                    <Route path="/document/:id" component={Document} />
+                  </Col>
+                </Row>
+              </Container>
+            </Jumbotron>
+          </ReactiveBase>
+        </div>
+      </Router>
     );
   }
 }
