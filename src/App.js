@@ -13,7 +13,7 @@ import {
 import {ReactiveBase} from '@appbaseio/reactivesearch';
 import {Route, BrowserRouter as Router, Link} from "react-router-dom";
 import Search from "./components/Search";
-import Document from "./components/Document";
+import UpdateDocument from "./components/UpdateDocument";
 import DocumentSource from "./components/DocumentSource";
 
 class App extends Component {
@@ -54,7 +54,7 @@ class App extends Component {
                   <Row>
                     <Col>
                       <Route path="/" exact component={Search} />
-                      <Route path="/document/:id" exact component={Document} />
+                      <Route path="/document/:id" exact component={UpdateDocument} />
                       <Route path="/document/:id/source" exact component={DocumentSource} />
                     </Col>
                   </Row>
