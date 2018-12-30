@@ -1,6 +1,7 @@
 import React from 'react';
-import DataSearch from "@appbaseio/reactivesearch/lib/components/search/DataSearch";
-import ResultList from "@appbaseio/reactivesearch/lib/components/result/ResultList";
+import {ReactiveList, DataSearch} from "@appbaseio/reactivesearch";
+import {ListGroup, ListGroupItem} from "reactstrap";
+import {Link} from "react-router-dom";
 
 const presentQuery = function () {
   return {
@@ -22,21 +23,19 @@ const Search = () => (
       debounce={200}
       autosuggest={false}
     />
-    <ResultList
-      componentId="results"
-      dataField="createdAt"
-      react={{
-        "and": ["searchbox"]
-      }}
-      onData={(res) => {
-        return {
-          title: res.createdAt,
-          url: `/document/${res._id}`
-        }
-      }}
-      defaultQuery={presentQuery}
-      target=""
-    />
+    <ListGroup>
+      <ReactiveList
+        componentId="results"
+        dataField="createdAt"
+        react={{
+          "and": ["searchbox"]
+        }}
+        onData={(res) => {
+          return <Link key={res._id} to={`/document/${res._id}`}><ListGroupItem>{res._id}</ListGroupItem></Link>;
+        }}
+        defaultQuery={presentQuery}
+      />
+    </ListGroup>
   </div>
 );
 

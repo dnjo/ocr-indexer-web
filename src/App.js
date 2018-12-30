@@ -12,9 +12,10 @@ import {
   Col,
   Jumbotron} from 'reactstrap';
 import {ReactiveBase} from '@appbaseio/reactivesearch';
-import {Route, BrowserRouter as Router} from "react-router-dom";
+import {Route, BrowserRouter as Router, Link} from "react-router-dom";
 import Search from "./Search";
 import Document from "./Document";
+import DocumentSource from "./DocumentSource";
 
 class App extends Component {
   constructor(props) {
@@ -32,35 +33,38 @@ class App extends Component {
   }
   render() {
     return (
-      <Router>
-        <div>
-          <ReactiveBase
-            app="results"
-            url={process.env.REACT_APP_BACKEND_BASE_URL + '/search'}>
-            <Navbar color="inverse" light expand="md">
-              <NavbarBrand href="/">ocr-indexer</NavbarBrand>
-              <NavbarToggler onClick={this.toggle} />
-              <Collapse isOpen={this.state.isOpen} navbar>
-                <Nav className="ml-auto" navbar>
-                  <NavItem>
-                    <NavLink href="https://github.com/dnjo/ocr-indexer-web">Github</NavLink>
-                  </NavItem>
-                </Nav>
-              </Collapse>
-            </Navbar>
-            <Jumbotron>
-              <Container>
-                <Row>
-                  <Col>
-                    <Route path="/" exact component={Search} />
-                    <Route path="/document/:id" component={Document} />
-                  </Col>
-                </Row>
-              </Container>
-            </Jumbotron>
-          </ReactiveBase>
-        </div>
-      </Router>
+      <div>
+        <ReactiveBase
+          app="results"
+          url={process.env.REACT_APP_BACKEND_BASE_URL + '/search'}>
+          <Router>
+            <div>
+              <Navbar color="inverse" light expand="md">
+                <Link to="/"><NavbarBrand>ocr-indexer</NavbarBrand></Link>
+                <NavbarToggler onClick={this.toggle} />
+                <Collapse isOpen={this.state.isOpen} navbar>
+                  <Nav className="ml-auto" navbar>
+                    <NavItem>
+                      <NavLink href="https://github.com/dnjo/ocr-indexer-web">Github</NavLink>
+                    </NavItem>
+                  </Nav>
+                </Collapse>
+              </Navbar>
+              <Jumbotron>
+                <Container>
+                  <Row>
+                    <Col>
+                      <Route path="/" exact component={Search} />
+                      <Route path="/document/:id" exact component={Document} />
+                      <Route path="/document/:id/source" exact component={DocumentSource} />
+                    </Col>
+                  </Row>
+                </Container>
+              </Jumbotron>
+            </div>
+          </Router>
+        </ReactiveBase>
+      </div>
     );
   }
 }
