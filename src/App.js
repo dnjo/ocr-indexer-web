@@ -13,9 +13,9 @@ import {
   Jumbotron} from 'reactstrap';
 import {ReactiveBase} from '@appbaseio/reactivesearch';
 import {Route, BrowserRouter as Router, Link} from "react-router-dom";
-import Search from "./Search";
-import Document from "./Document";
-import DocumentSource from "./DocumentSource";
+import Search from "./components/Search";
+import Document from "./components/Document";
+import DocumentSource from "./components/DocumentSource";
 
 class App extends Component {
   constructor(props) {
