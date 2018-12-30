@@ -31,7 +31,11 @@ const Search = () => (
           "and": ["searchbox"]
         }}
         onData={(res) => {
-          return <Link key={res._id} to={`/document/${res._id}`}><ListGroupItem>{res._id}</ListGroupItem></Link>;
+          return (
+            <Link key={res._id} to={`/document/${res._id}`}>
+              <ListGroupItem>{res.text}</ListGroupItem>
+            </Link>
+          )
         }}
         defaultQuery={presentQuery}
       />

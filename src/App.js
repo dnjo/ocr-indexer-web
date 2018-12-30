@@ -3,7 +3,6 @@ import {
   Collapse,
   Navbar,
   NavbarToggler,
-  NavbarBrand,
   Nav,
   NavItem,
   NavLink,
@@ -40,7 +39,7 @@ class App extends Component {
           <Router>
             <div>
               <Navbar color="inverse" light expand="md">
-                <Link to="/"><NavbarBrand>ocr-indexer</NavbarBrand></Link>
+                <Link to="/" className="navbar-brand">ocr-indexer</Link>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                   <Nav className="ml-auto" navbar>
