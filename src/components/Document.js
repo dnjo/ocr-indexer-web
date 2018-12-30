@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { API } from 'aws-amplify';
 import { Link } from "react-router-dom";
-import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import { Button, Col, Container, Form, FormGroup, Input, Label, Row, UncontrolledAlert } from "reactstrap";
 
 class Document extends Component {
   constructor(props) {
@@ -10,12 +10,15 @@ class Document extends Component {
     this.state = {
       match: props.match,
       text: '',
-      ocrText: ''
+      ocrText: '',
+      saveSuccess: false,
+      saveError: false
     };
 
     this.handleDocumentTextChange = this.handleDocumentTextChange.bind(this);
     this.handleDocumentOcrTextChange = this.handleDocumentOcrTextChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.clearSaveAlert = this.clearSaveAlert.bind(this);
   }
 
   componentDidMount() {
@@ -33,6 +36,10 @@ class Document extends Component {
     this.setState({ ocrText: event.target.value });
   }
 
+  clearSaveAlert() {
+    this.setState( { saveSuccess: false, saveError: false });
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     const init = {
@@ -41,14 +48,18 @@ class Document extends Component {
         ocrText: this.state.ocrText
       }
     };
-    API.put('Backend', `/images/${this.state.match.params.id}`, init).catch(error => {
-      console.log(error);
+    API.put('Backend', `/images/${this.state.match.params.id}`, init).then(() => {
+      this.setState({ saveSuccess: true });
+    }).catch(() => {
+      this.setState({ saveError: true });
     });
   }
 
   render() {
     return (
       <div>
+        <UncontrolledAlert color="success" isOpen={this.state.saveSuccess} toggle={this.clearSaveAlert}>Document saved.</UncontrolledAlert>
+        <UncontrolledAlert color="danger" isOpen={this.state.saveError} toggle={this.clearSaveAlert}>Failed to save document.</UncontrolledAlert>
         <Container>
           <Row className="mb-3">
             <Col className="p-0">
