@@ -22,13 +22,11 @@ class UpdateDocument extends Component {
   }
 
   getDocumentDataPromise() {
-    return API.get('Backend', `/images/${this.props.match.params.id}`, {}).then(response => {
-      this.setState({ ocrText: response.ocrText });
-      return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
+      API.get('Backend', `/images/${this.props.match.params.id}`, {}).then(response => {
+        this.setState({ ocrText: response.ocrText });
         resolve(response);
-      });
-    }).catch(error => {
-      return new Promise((resolve, reject) => {
+      }).catch(error => {
         reject(error);
       });
     });

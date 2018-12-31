@@ -67,7 +67,7 @@ class Document extends Component {
             </FormGroup>
           )}
           <FormGroup check row>
-            <Button  color="primary">{this.props.submitButtonName}</Button>
+            <Button color="primary">{this.props.submitButtonName}</Button>
           </FormGroup>
         </Form>
       </>

@@ -16,34 +16,51 @@ class CreateDocument extends Component {
     this.handleImageFileChange = this.handleImageFileChange.bind(this);
   }
 
-  updateDocument(id, data, resolve, reject) {
-    API.put('Backend', `/images/${id}`, { body: data })
-      .then(response => resolve(response))
-      .catch(reason => reject(reason));
+  base64EncodeImageFile(imageFile) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(imageFile);
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      }
+    });
+  }
+
+  postImage(imageBody) {
+    return new Promise((resolve, reject) => {
+      const init = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Language': 'swe'
+        },
+        body: imageBody
+      };
+      API.post('Backend', '/images', init).then(response => {
+        resolve(response.id);
+      }).catch(reason => {
+        reject(reason);
+      });
+    })
+  }
+
+  updateDocument(id, data) {
+    return new Promise((resolve, reject) => {
+      API.put('Backend', `/images/${id}`, { body: data })
+        .then(response => resolve(response))
+        .catch(reason => reject(reason));
+    });
   }
 
   createDocumentPromise(data) {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(this.state.imageFile);
-      reader.onload = () => {
-        const init = {
-          headers: {
-            'Content-Type': 'application/json',
-            'Content-Language': 'swe'
-          },
-          body: reader.result
-        };
-        API.post('Backend', '/images', init).then(response => {
-          this.updateDocument(response.id, data, resolve, reject);
-        }).catch(reason => {
-          reject(reason);
-        });
-      };
-
-      reader.onerror = (error) => {
-        reject(error);
-      }
+      this.base64EncodeImageFile(this.state.imageFile)
+        .then((imageBody) => this.postImage(imageBody))
+        .then((id) => this.updateDocument(id, data))
+        .then((response) => resolve(response))
+        .catch((error) => reject(error));
     });
   }
 
