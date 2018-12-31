@@ -41,7 +41,7 @@ class App extends Component {
           <Router>
             <div>
               <Navbar color="inverse" light expand="md">
-                <Link to="/" className="navbar-brand">ocr-indexer</Link>
+                <Link to="/" className="navbar-brand">Docr</Link>
                 <Link to="/document"><Button>Create new</Button></Link>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
