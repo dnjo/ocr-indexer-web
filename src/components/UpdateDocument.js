@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Document from "./Document";
 import { API } from 'aws-amplify';
-import { Button, Col, Container, Input, Row } from "reactstrap";
+import { Button, Col, Container, Input, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 
 class UpdateDocument extends Component {
@@ -9,18 +9,20 @@ class UpdateDocument extends Component {
     super(props);
 
     this.state = {
-      match: props.match,
-      ocrText: ''
+      ocrText: '',
+      displayDeleteModal: false
     };
 
     this.getDocumentDataPromise = this.getDocumentDataPromise.bind(this);
     this.updateDocumentPromise = this.updateDocumentPromise.bind(this);
     this.getDocumentDataPromise = this.getDocumentDataPromise.bind(this);
     this.handleDocumentOcrTextChange = this.handleDocumentOcrTextChange.bind(this);
+    this.toggleDeleteModal = this.toggleDeleteModal.bind(this);
+    this.deleteDocument = this.deleteDocument.bind(this);
   }
 
   getDocumentDataPromise() {
-    return API.get('Backend', `/images/${this.state.match.params.id}`, {}).then(response => {
+    return API.get('Backend', `/images/${this.props.match.params.id}`, {}).then(response => {
       this.setState({ ocrText: response.ocrText });
       return new Promise(resolve => {
         resolve(response);
@@ -34,7 +36,7 @@ class UpdateDocument extends Component {
 
   updateDocumentPromise(data) {
     data.ocrText = this.state.ocrText;
-    return API.put('Backend', `/images/${this.state.match.params.id}`, { body: data });
+    return API.put('Backend', `/images/${this.props.match.params.id}`, { body: data });
   }
 
   updateOcrTextElement() {
@@ -47,23 +49,45 @@ class UpdateDocument extends Component {
     }
   }
 
+  toggleDeleteModal() {
+    this.setState({ displayDeleteModal: !this.state.displayDeleteModal });
+  }
+
   handleDocumentOcrTextChange(event) {
     this.setState({ ocrText: event.target.value });
+  }
+
+  deleteDocument() {
+    this.toggleDeleteModal();
+    API.del('Backend', `/images/${this.props.match.params.id}`, {}).then(() => {
+      setTimeout(() => this.props.history.push('/'), 1000);
+    });
   }
 
   render() {
     return (
       <>
+        <Modal isOpen={this.state.displayDeleteModal} centered={true}>
+          <ModalHeader>Confirm document delete</ModalHeader>
+          <ModalBody>Are you sure that you want to delete the document?</ModalBody>
+          <ModalFooter>
+            <Button onClick={this.deleteDocument} color="primary">Delete</Button>
+            <Button onClick={this.toggleDeleteModal} color="secondary">Cancel</Button>
+          </ModalFooter>
+        </Modal>
         <Container>
           <Row className="mb-3">
             <Col className="p-0">
-              <Link className="float-right" to={`${this.state.match.url}/source`}>
-                <Button>View source document</Button>
-              </Link>
+              <div className="float-right">
+                <Link to={`${this.props.match.url}/source`}>
+                  <Button>View source document</Button>
+                </Link>
+                <Button onClick={this.toggleDeleteModal} className="ml-3" color="danger">Delete document</Button>
+              </div>
             </Col>
           </Row>
         </Container>
-        <Document documentUrl={this.state.match.url}
+        <Document documentUrl={this.props.match.url}
                   mountDataPromise={this.getDocumentDataPromise}
                   submitPromise={this.updateDocumentPromise}
                   submitButtonName="Update"
