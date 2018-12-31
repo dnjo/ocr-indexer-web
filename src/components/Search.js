@@ -30,14 +30,17 @@ const Search = () => (
         react={{
           "and": ["searchbox"]
         }}
-        onData={(res) => {
-          return (
-            <Link key={res._id} to={`/document/${res._id}`}>
-              <ListGroupItem>{res.text}</ListGroupItem>
-            </Link>
-          )
-        }}
+        onData={(res) =>
+          <Link key={res._id} to={`/document/${res._id}`}>
+            <ListGroupItem>{res.text}</ListGroupItem>
+          </Link>
+        }
         defaultQuery={presentQuery}
+        pagination={true}
+        sortOptions={[
+          { label: 'Created', dataField: 'createdAt', sortBy: 'desc' },
+          { label: 'Updated', dataField: 'updatedAt', sortBy: 'desc' }
+        ]}
       />
     </ListGroup>
   </div>
