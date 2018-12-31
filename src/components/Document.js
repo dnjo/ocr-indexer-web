@@ -1,39 +1,33 @@
 import React, { Component } from 'react';
-import { API } from 'aws-amplify';
-import { Link } from "react-router-dom";
-import { Button, Col, Container, Form, FormGroup, Input, Label, Row, UncontrolledAlert } from "reactstrap";
+import { Button, Col, Form, FormGroup, Input, Label, UncontrolledAlert } from "reactstrap";
+import PropTypes from 'prop-types';
 
 class Document extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      match: props.match,
       text: '',
-      ocrText: '',
       saveSuccess: false,
       saveError: false
     };
 
     this.handleDocumentTextChange = this.handleDocumentTextChange.bind(this);
-    this.handleDocumentOcrTextChange = this.handleDocumentOcrTextChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.clearSaveAlert = this.clearSaveAlert.bind(this);
   }
 
   componentDidMount() {
-    API.get('Backend', `/images/${this.state.match.params.id}`, {}).then(response => {
-      this.setState({ text: response.text })
-      this.setState({ ocrText: response.ocrText })
+    if (!this.props.mountDataPromise) {
+      return;
+    }
+    this.props.mountDataPromise().then(response => {
+      this.setState({ text: response.text });
     });
   }
 
   handleDocumentTextChange(event) {
     this.setState({ text: event.target.value });
-  }
-
-  handleDocumentOcrTextChange(event) {
-    this.setState({ ocrText: event.target.value });
   }
 
   clearSaveAlert() {
@@ -42,13 +36,10 @@ class Document extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const init = {
-      body: {
-        text: this.state.text,
-        ocrText: this.state.ocrText
-      }
+    const data = {
+      text: this.state.text
     };
-    API.put('Backend', `/images/${this.state.match.params.id}`, init).then(() => {
+    this.props.submitPromise(data).then(() => {
       this.setState({ saveSuccess: true });
     }).catch(() => {
       this.setState({ saveError: true });
@@ -57,16 +48,9 @@ class Document extends Component {
 
   render() {
     return (
-      <div>
-        <UncontrolledAlert color="success" isOpen={this.state.saveSuccess} toggle={this.clearSaveAlert}>Document saved.</UncontrolledAlert>
-        <UncontrolledAlert color="danger" isOpen={this.state.saveError} toggle={this.clearSaveAlert}>Failed to save document.</UncontrolledAlert>
-        <Container>
-          <Row className="mb-3">
-            <Col className="p-0">
-              <Link className="float-right" to={`${this.state.match.url}/source`}><Button>View source document</Button></Link>
-            </Col>
-          </Row>
-        </Container>
+      <>
+        <UncontrolledAlert color="success" isOpen={this.state.saveSuccess} toggle={this.clearSaveAlert}>{this.props.successMessage}</UncontrolledAlert>
+        <UncontrolledAlert color="danger" isOpen={this.state.saveError} toggle={this.clearSaveAlert}>{this.props.errorMessage}</UncontrolledAlert>
         <Form onSubmit={this.handleSubmit}>
           <FormGroup row>
             <Label for="documentText" sm={2}>Summary</Label>
@@ -74,19 +58,30 @@ class Document extends Component {
               <Input type="text" name="documentText" id="documentText" value={this.state.text || ''} onChange={this.handleDocumentTextChange} />
             </Col>
           </FormGroup>
-          <FormGroup row>
-            <Label for="ocrText" sm={2}>Scanned text</Label>
-            <Col sm={10}>
-              <Input type="textarea" name="ocrText" id="ocrText" value={this.state.ocrText || ''} rows="20" onChange={this.handleDocumentOcrTextChange} />
-            </Col>
-          </FormGroup>
+          {(this.props.formElements || []).map(element =>
+            <FormGroup key={element.elementId} row>
+              <Label for={element.elementId} sm={2}>{element.labelName}</Label>
+              <Col sm={10}>
+                {element.element}
+              </Col>
+            </FormGroup>
+          )}
           <FormGroup check row>
-            <Button color="primary">Save</Button>
+            <Button  color="primary">{this.props.submitButtonName}</Button>
           </FormGroup>
         </Form>
-      </div>
+      </>
     )
   }
 }
+
+Document.propTypes = {
+        mountDataPromise: PropTypes.func,
+        submitPromise: PropTypes.func.isRequired,
+        submitButtonName: PropTypes.string.isRequired,
+        successMessage: PropTypes.string.isRequired,
+        errorMessage: PropTypes.string.isRequired,
+        formElements: PropTypes.array
+};
 
 export default Document;

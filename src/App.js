@@ -9,11 +9,13 @@ import {
   Container,
   Row,
   Col,
-  Jumbotron} from 'reactstrap';
+  Jumbotron, Button
+} from 'reactstrap';
 import {ReactiveBase} from '@appbaseio/reactivesearch';
 import {Route, BrowserRouter as Router, Link} from "react-router-dom";
 import Search from "./components/Search";
-import Document from "./components/Document";
+import UpdateDocument from "./components/UpdateDocument";
+import CreateDocument from "./components/CreateDocument";
 import DocumentSource from "./components/DocumentSource";
 
 class App extends Component {
@@ -40,6 +42,7 @@ class App extends Component {
             <div>
               <Navbar color="inverse" light expand="md">
                 <Link to="/" className="navbar-brand">ocr-indexer</Link>
+                <Link to="/document"><Button>Create new</Button></Link>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                   <Nav className="ml-auto" navbar>
@@ -54,7 +57,8 @@ class App extends Component {
                   <Row>
                     <Col>
                       <Route path="/" exact component={Search} />
-                      <Route path="/document/:id" exact component={Document} />
+                      <Route path="/document" exact component={CreateDocument} />
+                      <Route path="/document/:id" exact component={UpdateDocument} />
                       <Route path="/document/:id/source" exact component={DocumentSource} />
                     </Col>
                   </Row>
