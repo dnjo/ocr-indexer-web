@@ -55,13 +55,9 @@ class CreateDocument extends Component {
   }
 
   createDocumentPromise(data) {
-    return new Promise((resolve, reject) => {
-      this.base64EncodeImageFile(this.state.imageFile)
-        .then((imageBody) => this.postImage(imageBody))
-        .then((id) => this.updateDocument(id, data))
-        .then((response) => resolve(response))
-        .catch((error) => reject(error));
-    });
+    return this.base64EncodeImageFile(this.state.imageFile)
+      .then((imageBody) => this.postImage(imageBody))
+      .then((id) => this.updateDocument(id, data));
   }
 
   handleImageFileChange(event) {
