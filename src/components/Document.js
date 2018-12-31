@@ -58,7 +58,7 @@ class Document extends Component {
               <Input type="text" name="documentText" id="documentText" value={this.state.text || ''} onChange={this.handleDocumentTextChange} />
             </Col>
           </FormGroup>
-          {this.props.formElements.map(element =>
+          {(this.props.formElements || []).map(element =>
             <FormGroup key={element.elementId} row>
               <Label for={element.elementId} sm={2}>{element.labelName}</Label>
               <Col sm={10}>
