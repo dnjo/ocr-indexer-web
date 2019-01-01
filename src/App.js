@@ -119,7 +119,7 @@ class App extends Component {
             <div>
               <Navbar color="inverse" light expand="md">
                 <Link to="/" className="navbar-brand">Docr</Link>
-                { this.state.authState === 'signedIn' && <Link to="/document"><Button>Create new</Button></Link> }
+                { this.state.authState === 'signedIn' && <Link to="/document"><Button color="primary">New document</Button></Link> }
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                   <Nav className="ml-auto" navbar>
