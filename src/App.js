@@ -20,7 +20,10 @@ import CreateDocument from "./components/CreateDocument";
 import DocumentSource from "./components/DocumentSource";
 import OAuthButton from "./components/OAuthButton";
 
-const LoggedIn = () => {
+const signedInState = 'signedIn';
+const signedOutState = 'signedOut';
+
+const SignedIn = () => {
   return (
     <Container className="mt-5">
       <Row>
@@ -35,7 +38,7 @@ const LoggedIn = () => {
   );
 };
 
-const LoggedOut = () => {
+const SignedOut = () => {
   return (
     <div>
       <div>
@@ -59,6 +62,8 @@ class App extends Component {
     this.onHubCapsule = this.onHubCapsule.bind(this);
     this.toggle = this.toggle.bind(this);
     this.signOut = this.signOut.bind(this);
+    this.setSignedIn = this.setSignedIn.bind(this);
+    this.setSignedOut = this.setSignedOut.bind(this);
     Hub.listen('auth', this);
 
     this.state = {
@@ -75,10 +80,10 @@ class App extends Component {
 
   componentDidMount() {
     // check the current user when the App component is loaded
-    Auth.currentAuthenticatedUser().then(user => {
-      this.setState({authState: 'signedIn'});
+    Auth.currentAuthenticatedUser().then(() => {
+      this.setSignedIn();
     }).catch(e => {
-      this.setState({authState: 'signIn'});
+      this.setSignedOut();
     });
   }
 
@@ -88,10 +93,10 @@ class App extends Component {
     if (channel === 'auth') {
       switch (payload.event) {
         case 'signIn':
-          this.setState({authState: 'signedIn'});
+          this.setSignedIn();
           break;
         case 'signIn_failure':
-          this.setState({authState: 'signIn'});
+          this.setSignedOut();
           break;
         default:
           break;
@@ -99,10 +104,16 @@ class App extends Component {
     }
   }
 
+  async setSignedIn() {
+    this.setState({ authState: signedInState, authToken: (await Auth.currentSession()).idToken.jwtToken });
+  }
+
+  setSignedOut() {
+    this.setState({ authState: signedOutState, authToken: null });
+  }
+
   signOut() {
-    Auth.signOut().catch(e => {
-      console.log(e);
-    });
+    Auth.signOut();
   }
 
   render() {
@@ -113,23 +124,24 @@ class App extends Component {
       <div>
         <ReactiveBase
           app="results"
-          url={process.env.REACT_APP_BACKEND_BASE_URL + '/search'}>
+          url={process.env.REACT_APP_BACKEND_BASE_URL + '/search'}
+          headers={ { Authorization: this.state.authToken } }>
           <Router>
             <div>
               <Navbar color="inverse" light expand="md">
                 <Link to="/" className="navbar-brand">Docr</Link>
-                { this.state.authState === 'signedIn' && <Link to="/document"><Button color="primary">New document</Button></Link> }
+                { this.state.authState === signedInState && <Link to="/document"><Button color="primary">New document</Button></Link> }
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                   <Nav className="ml-auto" navbar>
-                    { this.state.authState === 'signedIn' && <NavItem><NavLink onClick={this.signOut} href="">Log out</NavLink></NavItem> }
+                    { this.state.authState === signedInState && <NavItem><NavLink onClick={this.signOut} href="">Log out</NavLink></NavItem> }
                     <NavItem>
                       <NavLink href="https://github.com/dnjo/ocr-indexer-web">Github</NavLink>
                     </NavItem>
                   </Nav>
                 </Collapse>
               </Navbar>
-              { this.state.authState === 'signedIn' ? <LoggedIn/> : <LoggedOut/>}
+              { this.state.authState === signedInState ? <SignedIn/> : <SignedOut/>}
             </div>
           </Router>
         </ReactiveBase>
