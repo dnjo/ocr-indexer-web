@@ -58,6 +58,7 @@ class App extends Component {
 
     this.onHubCapsule = this.onHubCapsule.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.signOut = this.signOut.bind(this);
     Hub.listen('auth', this);
 
     this.state = {
@@ -99,9 +100,7 @@ class App extends Component {
   }
 
   signOut() {
-    Auth.signOut().then(() => {
-      this.setState({authState: 'signIn'});
-    }).catch(e => {
+    Auth.signOut().catch(e => {
       console.log(e);
     });
   }
