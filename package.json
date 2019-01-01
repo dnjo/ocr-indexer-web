@@ -5,6 +5,7 @@
   "dependencies": {
     "@appbaseio/reactivesearch": "^2.15.0",
     "aws-amplify": "^1.1.18",
+    "aws-amplify-react": "^2.2.5",
     "bootstrap": "^4.2.1",
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
