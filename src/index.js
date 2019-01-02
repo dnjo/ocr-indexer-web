@@ -19,10 +19,10 @@ Amplify.configure({
       scope : ['phone', 'email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
 
       // Callback URL
-      redirectSignIn : 'http://localhost:3000/',
+      redirectSignIn : process.env.REACT_APP_BASE_URL,
 
       // Sign out URL
-      redirectSignOut : 'http://localhost:3000/',
+      redirectSignOut : process.env.REACT_APP_BASE_URL,
 
       // 'code' for Authorization code grant,
       // 'token' for Implicit grant
