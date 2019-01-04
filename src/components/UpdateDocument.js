@@ -59,9 +59,10 @@ class UpdateDocument extends Component {
 
   deleteDocument() {
     this.toggleDeleteModal();
-    API.del('Backend', `/images/${this.props.match.params.id}`, {}).then(() => {
-      setTimeout(() => this.props.history.push('/'), 1000);
-    });
+    this.setState({ loading: true });
+    API.del('Backend', `/images/${this.props.match.params.id}`, {})
+      .then(() => setTimeout(() => this.props.history.push('/'), 1000))
+      .catch(() => this.setState({ loading: false }));
   }
 
   render() {
