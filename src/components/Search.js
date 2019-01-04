@@ -2,6 +2,7 @@ import React from 'react';
 import {ReactiveList, DataSearch} from "@appbaseio/reactivesearch";
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {Link} from "react-router-dom";
+import {SpinnerContainer} from './LoadingSpinner';
 
 const presentQuery = function () {
   return {
@@ -16,13 +17,14 @@ const presentQuery = function () {
 };
 
 const Search = () => (
-  <div>
+  <>
     <DataSearch
       componentId="searchbox"
       dataField={["text", "ocrText"]}
       debounce={200}
       autosuggest={false}
     />
+    <div className="mt-5">
     <ListGroup>
       <ReactiveList
         componentId="results"
@@ -41,9 +43,12 @@ const Search = () => (
           { label: 'Created', dataField: 'createdAt', sortBy: 'desc' },
           { label: 'Updated', dataField: 'updatedAt', sortBy: 'desc' }
         ]}
+        loader={<SpinnerContainer/>}
+        showResultStats={false}
       />
     </ListGroup>
-  </div>
+    </div>
+  </>
 );
 
 export default Search;

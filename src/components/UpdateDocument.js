@@ -3,7 +3,7 @@ import Document from "./Document";
 import { API } from 'aws-amplify';
 import { Button, Col, Container, Input, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
 import { Link } from "react-router-dom";
-import LoadingSpinner from "./LoadingSpinner";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 class UpdateDocument extends Component {
   constructor(props) {
