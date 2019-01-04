@@ -3,21 +3,7 @@ import Document from "./Document";
 import { API } from 'aws-amplify';
 import { Button, Col, Container, Input, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
 import { Link } from "react-router-dom";
-
-const LoadingSpinner = (props) => {
-  return (
-    <>
-      <div className={props.loading ? 'd-flex justify-content-center h-100' : 'd-none'}>
-        <div className="d-inline-flex align-self-center">
-          <div className="spinner-border" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
-      </div>
-      <div style={ props.loading ? { visibility: 'hidden' } : {} }>{props.children}</div>
-    </>
-  )
-};
+import LoadingSpinner from "./LoadingSpinner";
 
 class UpdateDocument extends Component {
   constructor(props) {
