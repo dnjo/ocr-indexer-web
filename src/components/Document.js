@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const SubmitButton = (props) => {
   return (
-    <Button color="primary">
+    <Button color="primary" disabled={props.submitting ? 'disabled' : ''}>
       { props.submitting && <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"/> }
       { props.name }
     </Button>
