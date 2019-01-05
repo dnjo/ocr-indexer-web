@@ -9,7 +9,7 @@ import {
   Container,
   Row,
   Col,
-  Button, Jumbotron
+  Jumbotron
 } from 'reactstrap';
 import {ReactiveBase} from '@appbaseio/reactivesearch';
 import {Route, BrowserRouter as Router, Link} from "react-router-dom";
@@ -130,14 +130,11 @@ class App extends Component {
             <div>
               <Navbar color="inverse" light expand="md">
                 <Link to="/" className="navbar-brand">Docr</Link>
-                { this.state.authState === signedInState && <Link to="/document"><Button color="primary">New document</Button></Link> }
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                   <Nav className="ml-auto" navbar>
+                    { this.state.authState === signedInState && <NavItem><Link className="nav-link" to="/document">New document</Link></NavItem> }
                     { this.state.authState === signedInState && <NavItem><NavLink onClick={this.signOut} href="">Log out</NavLink></NavItem> }
-                    <NavItem>
-                      <NavLink href="https://github.com/dnjo/ocr-indexer-web">Github</NavLink>
-                    </NavItem>
                   </Nav>
                 </Collapse>
               </Navbar>
