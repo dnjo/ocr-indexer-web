@@ -36,7 +36,7 @@ class UpdateDocument extends Component {
 
   updateDocumentPromise(data) {
     data.ocrText = this.state.ocrText;
-    return API.put('Backend', `/images/${this.props.match.params.id}`, { body: data });
+    return API.put('Backend new', `/images/${this.props.match.params.id}`, { body: data });
   }
 
   updateOcrTextElement() {
