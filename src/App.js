@@ -124,7 +124,7 @@ class App extends Component {
       <div>
         <ReactiveBase
           app="results"
-          url={process.env.REACT_APP_BACKEND_BASE_URL + '/search'}
+          url={process.env.REACT_APP_BACKEND_BASE_URL_NEW + '/search'}
           headers={ { Authorization: this.state.authToken } }>
           <Router>
             <div>
