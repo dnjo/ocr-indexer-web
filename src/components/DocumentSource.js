@@ -22,7 +22,7 @@ class DocumentSource extends Component {
     return (
       <LoadingSpinner loading={this.state.loading}>
         <div>
-          <img src={`${process.env.REACT_APP_BACKEND_BASE_URL}/images/${this.state.match.params.id}/blob`}
+          <img src={`${process.env.REACT_APP_BACKEND_BASE_URL_NEW}/images/${this.state.match.params.id}/blob`}
                alt="new"
                onLoad={this.disableLoadingState}
                onError={this.disableLoadingState} />
