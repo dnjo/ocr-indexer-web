@@ -45,6 +45,15 @@ Amplify.configure({
             Authorization: (await Auth.currentSession()).idToken.jwtToken
           }
         }
+      },
+      {
+        name: "Backend new",
+        endpoint: process.env.REACT_APP_BACKEND_BASE_URL_NEW,
+        custom_header: async () => {
+          return {
+            Authorization: (await Auth.currentSession()).idToken.jwtToken
+          }
+        }
       }
     ]
   }

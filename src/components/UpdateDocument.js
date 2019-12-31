@@ -25,7 +25,7 @@ class UpdateDocument extends Component {
 
   getDocumentDataPromise() {
     return new Promise((resolve, reject) => {
-      API.get('Backend', `/images/${this.props.match.params.id}`, {}).then(response => {
+      API.get('Backend new', `/images/${this.props.match.params.id}`, {}).then(response => {
         this.setState({ ocrText: response.ocrText, loading: false });
         resolve(response);
       }).catch(error => {
