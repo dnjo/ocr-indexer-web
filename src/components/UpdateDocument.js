@@ -60,7 +60,7 @@ class UpdateDocument extends Component {
   deleteDocument() {
     this.toggleDeleteModal();
     this.setState({ loading: true });
-    API.del('Backend', `/images/${this.props.match.params.id}`, {})
+    API.del('Backend new', `/images/${this.props.match.params.id}`, {})
       .then(() => setTimeout(() => this.props.history.push('/'), 1000))
       .catch(() => this.setState({ loading: false }));
   }
